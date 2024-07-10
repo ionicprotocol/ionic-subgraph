@@ -21,13 +21,9 @@ export function handleBorrow(event: Borrow): void {
     userMarket = new UserMarket(userMarketId);
     userMarket.user = event.params.borrower.toHexString();
     userMarket.market = event.address.toHexString();
-    userMarket.borrowBalance = event.params.borrowAmount;
     userMarket.supplyBalance = new BigInt(0);
-  } else {
-    userMarket.borrowBalance = userMarket.borrowBalance.plus(
-      event.params.borrowAmount
-    );
   }
+  userMarket.borrowBalance = event.params.accountBorrows;
   userMarket.save();
 }
 
@@ -58,13 +54,18 @@ export function handleRepayBorrow(event: RepayBorrow): void {
   let userMarketId =
     event.params.borrower.toHexString() + "-" + event.address.toHexString();
   let userMarket = UserMarket.load(userMarketId)!;
-  userMarket.borrowBalance = userMarket.borrowBalance.minus(
-    event.params.repayAmount
-  );
+  if (!userMarket) {
+    userMarket = new UserMarket(userMarketId);
+    userMarket.user = event.params.borrower.toHexString();
+    userMarket.market = event.address.toHexString();
+    userMarket.borrowBalance = new BigInt(0);
+    userMarket.supplyBalance = new BigInt(0);
+  }
+  userMarket.borrowBalance = event.params.accountBorrows;
   userMarket.save();
 }
 
-export function redeem(event: Redeem): void {
+export function handleRedeem(event: Redeem): void {
   let userMarketId =
     event.params.redeemer.toHexString() + "-" + event.address.toHexString();
   let userMarket = UserMarket.load(userMarketId)!;

@@ -1,7 +1,7 @@
 type Pool @entity {
   id: ID!
   index: BigInt!
-  name: Bytes!
+  name: String!
   creator: Bytes!
   comptroller: Bytes!
   markets: [Market!]! @derivedFrom(field: "pool")

@@ -9,5 +9,6 @@ export function handlePoolRegistered(event: PoolRegistered): void {
   pool.comptroller = event.params.pool.comptroller;
   pool.creator = event.params.pool.creator;
   pool.index = event.params.index;
+  pool.name = event.params.pool.name;
   pool.save();
 }
