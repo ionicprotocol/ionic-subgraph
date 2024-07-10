@@ -1,0 +1,73 @@
+specVersion: 1.2.0
+description: Ionic Mode Main Market
+repository: https://github.com/poap-xyz/poap-mainnet-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: PoolDirectory
+    network: mode-mainnet
+    source:
+      address: "0x39C353Cf9041CcF467A04d0e78B63d961E81458a"
+      abi: PoolDirectory
+      startBlock: 2067120
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Pool
+      abis:
+        - name: PoolDirectory
+          file: ./abis/PoolDirectory.json
+      eventHandlers:
+        - event: PoolRegistered(uint256,(string,address,address,uint256,uint256))
+          handler: handlePoolRegistered
+      file: ./src/mappings/poolDirectory.ts
+templates:
+  - name: Comptroller
+    kind: ethereum/contract
+    network: mode-mainnet
+    source:
+      abi: Comptroller
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/comptroller.ts
+      entities:
+        - Market
+      abis:
+        - name: Comptroller
+          file: ./abis/Comptroller.json
+      eventHandlers:
+        - event: MarketListed(address)
+          handler: handleMarketListed
+  - name: Market
+    kind: ethereum/contract
+    network: mode-mainnet
+    source:
+      abi: Market
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/market.ts
+      entities:
+        - Market
+        - User
+        - UserMarket
+      abis:
+        - name: Market
+          file: ./abis/CToken.json
+      eventHandlers:
+        - event: Borrow(address,uint256,uint256,uint256)
+          handler: handleBorrow
+        - event: Mint(address,uint256,uint256)
+          handler: handleMint
+        - event: RepayBorrow(address,address,uint256,uint256,uint256)
+          handler: handleRepayBorrow
+        - event: Redeem(address,uint256,uint256)
+          handler: handleRedeem
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer

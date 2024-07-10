@@ -1,37 +1,26 @@
-type Token @entity
-{
-  id:                           ID!
-  owner:                        Account!
-  event:                        Event
-  transfers:                    [Transfer!]! @derivedFrom(field: "token")
-  transferCount:                BigInt!
-  created:                      BigInt!
-  mintOrder:                    BigInt
+type Pool @entity {
+  id: ID!
+  index: BigInt!
+  name: Bytes!
+  creator: Bytes!
+  comptroller: Bytes!
+  markets: [Market!]! @derivedFrom(field: "pool")
 }
 
-type Account @entity
-{
-  id:                           ID!
-  tokens:                       [Token!]! @derivedFrom(field: "owner")
-  tokensOwned:                  BigInt!
+type Market @entity {
+  id: ID!
+  pool: Pool!
 }
 
-type Event @entity
-{
-  id:                           ID!
-  tokens:                       [Token!]! @derivedFrom(field: "event")
-  tokenCount:              	    BigInt!
-  created:                      BigInt!
-  transferCount:                BigInt!
-  tokenMints:                   BigInt!
+type UserMarket @entity {
+  id: ID!
+  user: User!
+  market: Market!
+  borrowBalance: BigInt!
+  supplyBalance: BigInt!
 }
 
-type Transfer @entity
-{
-  id:                           ID!
-  token:                        Token!
-  from:                         Account!
-  to:                           Account!
-  transaction:                  Bytes!
-  timestamp:                    BigInt!
+type User @entity {
+  id: ID!
+  markets: [UserMarket!]! @derivedFrom(field: "user")
 }
