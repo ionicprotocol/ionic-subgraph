@@ -3,7 +3,7 @@ import { MarketListed } from "../../generated/templates/Comptroller/Comptroller"
 import { Market } from "../../generated/schema";
 
 export function handleMarketListed(event: MarketListed): void {
-  let market = new Market(event.params.cToken.toString());
+  let market = new Market(event.params.cToken.toHexString());
   market.pool = event.address.toHexString();
   market.save();
 

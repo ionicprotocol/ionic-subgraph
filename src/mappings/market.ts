@@ -53,7 +53,7 @@ export function handleMint(event: Mint): void {
 export function handleRepayBorrow(event: RepayBorrow): void {
   let userMarketId =
     event.params.borrower.toHexString() + "-" + event.address.toHexString();
-  let userMarket = UserMarket.load(userMarketId)!;
+  let userMarket = UserMarket.load(userMarketId);
   if (!userMarket) {
     userMarket = new UserMarket(userMarketId);
     userMarket.user = event.params.borrower.toHexString();
